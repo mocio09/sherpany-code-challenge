@@ -58,6 +58,7 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
         chmod 600 ~/.ssh/id_ed25519
+        ssh-keyscan -H $GRAFANA_AGENT_PUBLIC_IP >> ~/.ssh/known_hosts
         sed -i "s/HOST_IP/$GRAFANA_AGENT_PUBLIC_IP/" playbooks/inventory.ini
         cat playbooks/inventory.ini
-        ansible-playbook -i playbooks/inventory.ini --private-key ~/.ssh/id_ed25519 playbooks/grafana-agent.yml
+        ansible-playbook -i playbooks/inventory.ini playbooks/grafana-agent.yml
