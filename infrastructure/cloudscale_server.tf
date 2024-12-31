@@ -1,5 +1,5 @@
 provider "cloudscale" {
-  token = "dkjrc4tjzeo4zfuq6da6rcs7hwkgqxhv"
+  token = var.cloudscale_token
 }
 
 resource "cloudscale_server" "grafana_agent" {

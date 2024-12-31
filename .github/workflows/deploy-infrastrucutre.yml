@@ -38,10 +38,10 @@ jobs:
     - name: Plan Terraform
       run: |
         cd infrastructure
-        terraform plan
+        terraform plan -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}"
 
-    - name: Apply Terraform
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: |
-        cd infrastructure
-        terraform apply -auto-approve
+    # - name: Apply Terraform
+    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    #   run: |
+    #     cd infrastructure
+    #     terraform apply -auto-approve -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}"
