@@ -114,4 +114,3 @@ resource "kubernetes_job_v1" "db_init_job" {
   }
   depends_on = [ kubernetes_manifest.acid_minimal_cluster  ]
 }
-
