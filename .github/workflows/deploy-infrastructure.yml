@@ -60,3 +60,4 @@ jobs:
         chmod 600 ~/.ssh/id_ed25519
         sed -i "s/HOST_IP/$GRAFANA_AGENT_PUBLIC_IP/" playbooks/inventory.ini
         cat playbooks/inventory.ini
+        ansible-playbook -i playbooks/inventory.ini --private-key ~/.ssh/id_ed25519 playbooks/grafana-agent.yml
