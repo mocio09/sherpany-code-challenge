@@ -22,6 +22,8 @@ resource "kubernetes_network_policy" "allow_flask_to_postgres" {
         }
       }
 
+      
+
       ports {
         protocol = "TCP"
         port     = 5432 # PostgreSQL port
