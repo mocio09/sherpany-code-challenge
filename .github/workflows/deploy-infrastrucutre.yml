@@ -44,3 +44,10 @@ jobs:
       run: |
         cd infrastructure
         terraform apply -auto-approve -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}" | tee terraform_output.txt
+        export GRAFANA_AGENT_PUBLIC_IP=$(terraform output -raw grafana_agent_public_ip)
+        echo "GRAFANA_AGENT_PUBLIC_IP=$GRAFANA_AGENT_PUBLIC_IP" >> $GITHUB_ENV
+
+    - name: Update inventory.ini with Grafana Agent IP
+      run: |
+        sed -i "s/HOST_IP/$GRAFANA_AGENT_PUBLIC_IP/" playbooks/inventory.ini
+        cat playbooks/inventory.ini
