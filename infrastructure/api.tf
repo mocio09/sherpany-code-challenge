@@ -7,6 +7,8 @@ resource "kubernetes_deployment" "flask_app" {
     namespace = kubernetes_namespace.application_namespace.metadata[0].name
   }
 
+
+
   spec {
     replicas = 3
     selector {
