@@ -53,7 +53,7 @@ jobs:
         export GRAFANA_AGENT_PUBLIC_IP=$(terraform output -raw grafana_agent_public_ip)
         echo "GRAFANA_AGENT_PUBLIC_IP=$GRAFANA_AGENT_PUBLIC_IP" >> $GITHUB_ENV
 
-    - name: Deploy via Ansible
+    - name: Ansible Check Dry Run
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
@@ -61,4 +61,9 @@ jobs:
         ssh-keyscan -H $GRAFANA_AGENT_PUBLIC_IP >> ~/.ssh/known_hosts
         sed -i "s/HOST_IP/$GRAFANA_AGENT_PUBLIC_IP/" playbooks/inventory.ini
         cat playbooks/inventory.ini
+        ansible-playbook -i playbooks/inventory.ini playbooks/grafana-agent.yml --check
+
+    - name: Deploy via Ansible
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
         ansible-playbook -i playbooks/inventory.ini playbooks/grafana-agent.yml
