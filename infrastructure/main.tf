@@ -14,7 +14,6 @@ terraform {
   }
 }
 
-
 terraform {
   backend "gcs" {
     bucket  = "code-challenge-temporary-k8s"
