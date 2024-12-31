@@ -20,12 +20,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Create credentials file
-      run: echo "${{ secrets.GOOGLE_SA_CREDS }}" > infrastructure/service-account.json
-
-    - name: Create K8S Profile File 
-      run: echo "${{ secrets.KUBE_PROFILE }}" > infrastructure/kubeconfig
-
     - name: Install Terraform
       run: |
         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
@@ -36,6 +30,8 @@ jobs:
     - name: Initialize Terraform
       run: |
         cd infrastructure
+        echo "${{ secrets.GOOGLE_SA_CREDS }}" > service-account.json
+        echo "${{ secrets.KUBE_PROFILE }}" > kubeconfig
         terraform init
 
     - name: Plan Terraform
