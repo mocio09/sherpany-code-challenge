@@ -115,6 +115,3 @@ resource "kubernetes_job_v1" "db_init_job" {
   depends_on = [ kubernetes_manifest.acid_minimal_cluster  ]
 }
 
-
-#### export PGPASSWORD=$(kubectl get secret zalando.pg-cluster.credentials.postgresql.acid.zalan.do -o 'jsonpath={.data.password}' -n application | base64 -d)
-##  psql -U zalando -h localhost -p 5432 -d production
