@@ -3,12 +3,12 @@ name: Deploy Infrastructure
 on:
   pull_request:
     paths:
-      - 'infrastructur/**'
+      - 'infrastructure/**'
     branches:
       - main
   push:
     paths:
-      - 'infrastructur/**'
+      - 'infrastructure/**'
     branches:
       - main
 
