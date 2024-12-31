@@ -45,7 +45,8 @@ jobs:
         cd infrastructure
         terraform plan -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}"
 
-    - name: Apply Terraform
+    - id: apply_terraform
+      name: Apply Terraform
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         cd infrastructure
@@ -54,6 +55,8 @@ jobs:
         echo "GRAFANA_AGENT_PUBLIC_IP=$GRAFANA_AGENT_PUBLIC_IP" >> $GITHUB_ENV
 
     - name: Ansible Check Dry Run
+      id: ansible_dry_run
+      needs: apply_terraform
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
@@ -64,6 +67,7 @@ jobs:
         ansible-playbook -i playbooks/inventory.ini playbooks/grafana-agent.yml --check
 
     - name: Deploy via Ansible
+      needs: ansible_dry_run
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         ansible-playbook -i playbooks/inventory.ini playbooks/grafana-agent.yml
