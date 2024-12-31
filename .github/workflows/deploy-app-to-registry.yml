@@ -24,7 +24,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y wget
-          wget -qO- https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.45.1_Linux-64bit.tar.gz | tar zxvf -
+          wget -qO- https://github.com/aquasecurity/trivy/releases/latest/download/v0.58.1/trivy_0.58.1_Linux-64bit.tar.gz | tar zxvf -
           sudo mv trivy /usr/local/bin/
 
       # Step 3: Scan Python dependencies in the api folder
