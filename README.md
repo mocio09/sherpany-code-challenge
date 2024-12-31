@@ -56,3 +56,8 @@ The `infrastructure/` directory contains Terraform configurations that define an
 ## Playbooks
 
 The `playbooks` directory contains the Ansible playbook and inventory for infrastructure configuration for the grafana agent on the VM
+
+
+## Grafana Dashboards 
+
+http://83e8ed98-7e32-49e6-bb5e-8fa9450be47c.k8s.civo.com:30080/d/de8kbxbe19yiof/assessment
