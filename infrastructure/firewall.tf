@@ -4,6 +4,8 @@ resource "kubernetes_network_policy" "allow_flask_to_postgres" {
     namespace = kubernetes_namespace.application_namespace.metadata[0].name
   }
 
+
+
   spec {
     pod_selector {
       match_labels = {
