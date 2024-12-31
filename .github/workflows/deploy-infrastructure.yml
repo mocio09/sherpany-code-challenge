@@ -1,0 +1,72 @@
+name: Deploy Infrastructure
+
+on:
+  pull_request:
+    paths:
+      - 'infrastructure/**'
+      - 'playbooks/**'
+    branches:
+      - main
+  push:
+    paths:
+      - 'infrastructure/**'
+      - 'playbooks/**'
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Terraform
+      run: |
+        sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+        sudo apt-get update && sudo apt-get install -y terraform
+
+    - name: Install Ansible
+      run: |
+        sudo apt-get update && sudo apt-get install -y ansible
+
+    - name: Initialize Terraform
+      run: |
+        cd infrastructure
+        echo '${{ secrets.GOOGLE_SA_CREDS }}' > service-account.json
+        echo '${{ secrets.KUBE_PROFILE }}' > kubeconfig
+        terraform init
+
+    - name: Plan Terraform
+      run: |
+        cd infrastructure
+        terraform plan -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}"
+
+    - id: apply_terraform
+      name: Apply Terraform
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        cd infrastructure
+        terraform apply -auto-approve -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}" | tee terraform_output.txt
+        export GRAFANA_AGENT_PUBLIC_IP=$(terraform output -raw grafana_agent_public_ip)
+        echo "GRAFANA_AGENT_PUBLIC_IP=$GRAFANA_AGENT_PUBLIC_IP" >> $GITHUB_ENV
+
+    - name: Ansible Check Dry Run
+      id: ansible_dry_run
+      if: steps.apply_terraform.outcome == 'success'
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+        ssh-keyscan -H $GRAFANA_AGENT_PUBLIC_IP >> ~/.ssh/known_hosts
+        sed -i "s/HOST_IP/$GRAFANA_AGENT_PUBLIC_IP/" playbooks/inventory.ini
+        cat playbooks/inventory.ini
+        ansible-playbook -i playbooks/inventory.ini playbooks/grafana-agent.yml --check
+
+    - name: Deploy via Ansible
+      if: steps.ansible_dry_run.outcome == 'success'
+      run: |
+        ansible-playbook -i playbooks/inventory.ini playbooks/grafana-agent.yml
