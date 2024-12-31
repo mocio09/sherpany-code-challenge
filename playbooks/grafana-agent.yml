@@ -7,6 +7,7 @@
     grafana_agent_version: "0.39.1"
     prometheus_remote_write_url: "http://83e8ed98-7e32-49e6-bb5e-8fa9450be47c.k8s.civo.com:30080/api/v1/write"
 
+
   tasks:
     - name: Install prerequisites
       ansible.builtin.apt:
