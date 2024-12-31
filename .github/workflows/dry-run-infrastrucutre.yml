@@ -31,7 +31,7 @@ jobs:
       run: |
         cd infrastructure
         echo "${{ vars.GOOGLE_SA_CREDS }}" > service-account.json
-        cat service-account.json | jq
+        cat service-account.json | jq .
         echo "${{ secrets.KUBE_PROFILE }}" > kubeconfig
         terraform init
 
