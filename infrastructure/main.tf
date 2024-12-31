@@ -40,4 +40,3 @@ resource "kubernetes_namespace" "application_namespace" {
     name = "application"
   }
 }
-
