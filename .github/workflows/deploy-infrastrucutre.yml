@@ -31,7 +31,6 @@ jobs:
       run: |
         cd infrastructure
         echo '${{ secrets.GOOGLE_SA_CREDS }}' > service-account.json
-        cat service-account.json 
         echo '${{ secrets.KUBE_PROFILE }}' > kubeconfig
         terraform init
 
@@ -40,8 +39,8 @@ jobs:
         cd infrastructure
         terraform plan -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}"
 
-    # - name: Apply Terraform
-    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    #   run: |
-    #     cd infrastructure
-    #     terraform apply -auto-approve -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}"
+    - name: Apply Terraform
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        cd infrastructure
+        terraform apply -auto-approve -var="cloudscale_token=${{ secrets.CLOUDSCALE_TOKEN }}" | tee terraform_output.txt
