@@ -2,11 +2,11 @@ name: Scan, Build, and Push Docker Image
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - 'api/**'
   pull_request:
-    branches:
-      - main
+    paths:
+      - 'api/**'
 
 jobs:
   scan-and-build:
