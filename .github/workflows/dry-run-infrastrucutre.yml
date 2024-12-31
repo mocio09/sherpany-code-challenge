@@ -1,0 +1,43 @@
+name: Deploy Infrastructure
+
+on:
+  pull_request:
+    paths:
+      - 'infrastructur/**'
+    branches:
+      - main
+  push:
+    paths:
+      - 'infrastructur/**'
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Create credentials file
+      run: echo "${{ secrets.GOOGLE_SA_CREDS }}" > infrastructure/credentials.json
+
+    - name: Create K8S Profile File 
+      run: echo "${{ secrets.KUBE_PROFILE }}" > infrastructure/kubeconfig
+
+    - name: Initialize Terraform
+      run: |
+        cd infrastructure
+        terraform init"
+
+    - name: Initialize Terraform
+      run: |
+        cd infrastructure
+        terraform plan
+
+    - name: Apply Terraform
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        cd infrastructure
+        terraform apply -auto-approve

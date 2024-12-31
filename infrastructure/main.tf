@@ -15,12 +15,12 @@ terraform {
 }
 
 provider "kubernetes" {
-  config_path = "~/Downloads/kubeconfig"
+  config_path = "./kubeconfig"
 }
 
 provider "helm" {
   kubernetes {
-    config_path = "~/Downloads/kubeconfig"
+    config_path = "./kubeconfig"
   }
 }
 
