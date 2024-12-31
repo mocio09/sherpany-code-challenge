@@ -14,6 +14,14 @@ terraform {
   }
 }
 
+terraform {
+  backend "gcs" {
+    bucket  = "code-challenge-temporary-k8s"
+    prefix  = "terraform"
+    credentials = "service-account.json"
+  }
+}
+
 provider "kubernetes" {
   config_path = "./kubeconfig"
 }
