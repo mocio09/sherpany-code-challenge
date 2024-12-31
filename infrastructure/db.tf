@@ -15,6 +15,8 @@ EOF
   ]
 }
 
+
+
 resource "kubernetes_config_map" "db_init_script" {
   metadata {
     name = "db-init-script"
