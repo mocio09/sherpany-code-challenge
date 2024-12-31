@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - 'infrastructure/**'
+      - 'playbooks/**'
     branches:
       - main
   push:
     paths:
       - 'infrastructure/**'
+      - 'playbooks/**'
     branches:
       - main
 
