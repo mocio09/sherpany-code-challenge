@@ -56,7 +56,7 @@ jobs:
       # Step 6: Scan Built Docker Image
       - name: Scan Built Docker Image
         run: |
-          trivy image --severity HIGH,CRITICAL --exit-code 1 ${{ secrets.DOCKER_USERNAME }}/api:latest
+          trivy image --severity HIGH,CRITICAL --exit-code 1 ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
 
       # Step 7: Log in to Docker Registry
       - name: Log in to DockerHub
